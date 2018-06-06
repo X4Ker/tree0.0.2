@@ -37,7 +37,12 @@ public:
 		return (!root_);
 	}
 	
-	void insert(T value)
+bool insert(T value)
+{
+	if (find(value) == true) {
+		return false;
+	}
+	else
 	{
 		node_t * node = new node_t;
 		node->value = value;
@@ -48,37 +53,27 @@ public:
 			root_ = node;
 		}
 		else {
+			node_t * parrent = nullptr;
 			node_t * temp = root_;
-			while (temp != nullptr){
-				if (value > temp->value){
-					if (temp->right != nullptr) {
-						temp = temp->right;
-					}
-					else {
-						temp->right = node;
-						return;
-					}
+			while (temp != nullptr) {
+				parrent = temp;
+				if (value > temp->value) {
+					temp = temp->right;
+					parrent->right=node;
 				}
-				else {
-					if (value < temp->value){
-						if (temp->left != nullptr) {
-							temp = temp->left;
-						}
-						else {
-							temp->left = node;
-							return;
-						}
-					}
-					else
-					{
-						return;
-					}
-
+				else if (value < temp->value)
+				{
+					temp = temp->left;
+					parrent->left=node;
 				}
+				
 			}
+			return true;
 		}
 	}
-	bool find(T value) const
+}
+	
+bool find(T value) const
 	{
 		node_t * temp = root_;
 		while (temp != nullptr){
@@ -150,7 +145,7 @@ public:
 	{
 		root_ = nullptr;
 		size_t size = keys.size();
-		for (size_t i = 0; i < size; i++) {
+		for (auto& i : size) {	
 			T a = *(keys.begin()+i);
 			insert(a);
 		}
